@@ -1,9 +1,6 @@
 import Info as i
 
-#save item info, item state, item perks
-
-# {
-
+# loading the last save's info from saves.txt
 def loadSave():
     subjects = ["damage-pot", "dodge", "restoration", "charge", "uses", "name", "state", "modifier"]
     results = {}
@@ -19,6 +16,7 @@ def loadSave():
     i.playerItemsState = results[str(len(results)-1)]["state"]
     i.playerItemModifier = results[str(len(results)-1)]["modifier"]
 
+# updating the save's files
 def updateSave():
     saveStats = i.playerPotions, i.playerItems, i.playerItemsState, i.playerItemModifier
     removes = ["damage-pot", "dodge", "restoration", "charge", "uses", "name", "state", "modifier", "damage", "{", "}", ": ", '"', "'", "(", ")"]
@@ -38,13 +36,14 @@ def updateSave():
         f.write("\n")
         f.write(f"{number}, {saveStats}")
     
-
+# making a new save
 def newSave():
     with open("DungeonGame/saves.txt", "w") as f:
         f.write("\n")
     updateSave()
     print("Overwritten previous save.")
 
+# clearing the save if you died, same as newSave but without the print argument
 def died():
     with open("DungeonGame/saves.txt", "w") as f:
         f.write("\n")
