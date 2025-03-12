@@ -1,5 +1,16 @@
 import random
 
+"""
+OPTIMIZE THE HELL UP
+
+issues:
+- fails to start 2/3 times
+
+to add:
+- make fighting more immersive
+    - Maybe add weapon / other attack messages
+- balance enemies and drop rates
+"""
 
 #player statistics
 playerStats = {
@@ -13,23 +24,22 @@ playerStats = {
 
 #name just used for text
 
-# save would be potions, (None, None or 20, 1), False, 1 (if results[saveNumber][item] == None)
-#have to go through and save weapon name, or save as number
+# list of items you can use in the game
 Items = {
     1: {"charge": random.randint(5,20), "uses": random.randint(1,3), "name": "Dagger"}, #collect this first name, then use that name to find damage
     2: {"charge": random.randint(5,25), "uses": random.randint(2,5), "name": "Staff"},
     3: {"charge": random.randint(10,20), "uses": random.randint(1,3), "name": "Shortsword"},
     4: {"charge": random.randint(5,10), "uses": random.randint(3,5), "name": "Sickle"}
 }
+
+# item bonus damages
 ItemPowers = {
     1: {"damage": 3},
     2: {"damage": 4},
     3: {"damage": 4},
     4: {"damage": 5}
-    # have these be numbers, randomize easily that way, update modifier
-    #damage be here, dodge up, yada yada, for easy collecting and usage, if playerItems = [run thru item names] take a certain modifier? or randomized modifiers?
 }
-# Items["dagger"]["power"]["damage"]
+
 # player stats for easy access
 playerHealth = playerStats["stats"]
 playerDamage = playerStats["stats"]
@@ -40,9 +50,6 @@ playerBoosts = playerStats["ups"]
 playerItems = playerStats["item"]
 playerItemsState = playerStats["state"]
 playerItemModifier = playerStats["modifier"]
-
-# have a new variable that changes depending on item name? ie, once function completes it updates a variable so you can directly access the item?
-# save itemName in save file? including None?
 
 # lists for potion-related code
 potionNames = ["Damage Up Potion", "Dodge Up Potion", "Restoration Potion"]
@@ -78,5 +85,6 @@ def findAPotion(chance=1):
                 return f"{amount} {potionNames[potion_type]}s"
         num += 1
 
+# resets boosts
 playerBoosts["damage up"] = 0
 playerBoosts["dodge up"] = 0
