@@ -3,30 +3,131 @@ import time as t
 import Info as i
 import Save as s
 
-# change damage amount to vary each attack (+ random.randint(0,2)
+# make enemies harder, but still survivable / add difficulty scaler?
+#update saves
 """
 ideas:
 
-magic items, certain amounts of uses, recharges or one time charge
+magic items, certain amounts of uses, recharges or one time charge 
+    
+def itemReset():
+    i.playerItems["charge"] = None
+    i.playerItems["uses"] = None
+    i.playerItems["name"] = None
+    i.playerItemsState = False
+    i.playerItemsModifier = None
+
+def equipItem():
+    i.playerItemsState = True
+
+def unequipItem():
+    i.playerItemsState = False
+
+def findItem(itemNumber):
+    i.playerItems["charge"] = i.Items[itemNumber]["charge"]
+    i.playerItems["uses"] = i.Items[itemNumber]["uses"]
+    i.playerItems["name"] = i.Items[itemNumber]["name"]
+    i.playerItemModifier = random.randint(1,7)
+
+def pwr():
+    return i.ItemPowers[i.playerItemModifier]["damage"]
+
+
+def itemDegrade(itemName):
+    i.playerItems[itemName]["charge"] -= 1
+    if i.playerItems[itemName]["charge"] == 0:
+        i.playerItems[itemName]["state"] = False
+        i.playerItems[itemName]["uses"] -= 1
+        if i.playerItems[itemName]["uses"] <= 0:
+            print(f"Your {i.playerItems["name"]} broke!)
+            itemReset(itemName)
+            
+
+if i.playerItems = None or i.playerItemsState = False:
+    extraDamage = 0 #have it already set to 0 at the beginning, change if anything changes, find a way to take the item name then find its damage
+else:
+    extraDamage = pwr()
+
+if state = true then add damage boost/bonus thingy
 
 rename potions to other things for more depth
 
 add a longer description of fights
 """
 
+def itemReset():
+    i.playerItems["charge"] = None
+    i.playerItems["uses"] = None
+    i.playerItems["name"] = None
+    i.playerItemsState = False
+    i.playerItemModifier = None
+
+def equipItem():
+    i.playerItemsState = True
+
+def unequipItem():
+    i.playerItemsState = False
+
+def findItem(itemNumber):
+    i.playerItems["charge"] = i.Items[itemNumber]["charge"]
+    i.playerItems["uses"] = i.Items[itemNumber]["uses"]
+    i.playerItems["name"] = i.Items[itemNumber]["name"]
+    i.playerItemModifier = random.randint(1,7)
+
+def pwr():
+    return i.ItemPowers[i.playerItemModifier]["damage"]
+
+
+def itemDegrade():
+    i.playerItems["charge"] -= 1
+    if i.playerItems["charge"] == 0:
+        i.playerItemsState = False
+        i.playerItems["uses"] -= 1
+        if i.playerItems["uses"] <= 0:
+            print(f"Your {i.playerItems["name"]} broke!")
+            itemReset()
+
+def itemRecharge():
+    i.playerItems["charge"] += 1
+    if i.playerItems["charge"] == 20:
+        print(f"Your {i.playerItems["name"]} has recharged, with {i.playerItems["uses"]} uses left.")
+        print("1. Re-equip\n2. Continue the fight")
+        choice = input("Your Choice: ")
+        if choice == "1":
+            i.playerItemsState = True
+            print("Equipped item.")
+        elif choice == "2":
+            pass
+        else:
+            print("Please enter a valid choice.")
+            itemRecharge()
+
+def replaceItem():
+    itemNumber = random.randint(1,2)
+    print(f"You found a {i.Items[itemNumber]["name"]}! It has {i.Items[itemNumber]["charge"]} charges left and {i.Items[itemNumber]["uses"]} uses left!")
+    print("1. Take it\n2. Leave it\n\nNOTE: If you take the item and you already have an item, the new item willreplace the old one.")
+    choice = input("Your Choice: ")
+    if choice == "1":
+        findItem(itemNumber)
+    elif choice == "2":
+        pass
+    else:
+        print("Please enter a valid choice.")
+        replaceItem()
+
 def dungeonRun():
     
 		# list of enemies, including its health, damage, dodge chance, double hit chance, double loot (will eventually use or remove) and chance of encountering
     enemy = {
-        "undead": {"health": random.randint(23,30), "damage": random.randint(2,5), "dodge chance": 13, "double hit chance": 3, "double loot": random.randint(1,4), "chance": 16},
-        "bandit": {"health": random.randint(17, 25), "damage": random.randint(4,7), "dodge chance": random.randint(10,23), "double hit chance": random.randint(12,17), "double loot": random.randint(1,3), "chance": 30}, 
-        "snake": {"health": random.randint(7,15), "damage": random.randint(1,3), "dodge chance": 35, "double hit chance": 18, "double loot": random.randint(1,4), "chance": 45},
-        "undead guard": {"health": random.randint(27,35), "damage": random.randint(6,11), "dodge chance": 17, "double hit chance": random.randint(11,15), "double loot": random.randint(1,2), "chance": 57},
-        "giant spider": {"health": random.randint(13,20), "damage": random.randint(3,6), "dodge chance": random.randint(24,34), "double hit chance": random.randint(11,18), "double loot": random.randint(1,2), "chance": 68},
-        "giant armored spider": {"health": random.randint(17,26), "damage": random.randint(3,7), "dodge chance": random.randint(19,31), "double hit chance": random.randint(11,16), "double loot": random.randint(1,1), "chance": 77},
-        "goblin": {"health": random.randint(13,17), "damage": random.randint(2,5), "dodge chance": random.randint(13,23), "double hit chance": random.randint(13,16), "double loot": random.randint(1,4), "chance": 90},
-        "wizard": {"health": random.randint(36,44), "damage": random.randint(7,14), "dodge chance": random.randint(13,16), "double hit chance": random.randint(11,15), "double loot": random.randint(1,1), "chance": 97},
-        "King's Guard": {"health": random.randint(45,53), "damage": random.randint(13,17), "dodge chance": random.randint(3,7), "double hit chance": random.randint(11,15), "double loot": random.randint(1,1), "chance": 100},
+        "undead": {"health": random.randint(23,30), "damage": random.randint(2,5), "dodge chance": 13, "double hit chance": 3, "double loot": random.randint(1,4), "chance": 16, "find": 7},
+        "bandit": {"health": random.randint(17, 25), "damage": random.randint(4,7), "dodge chance": random.randint(10,23), "double hit chance": random.randint(12,17), "double loot": random.randint(1,3), "chance": 30, "find": 6}, 
+        "snake": {"health": random.randint(7,15), "damage": random.randint(1,3), "dodge chance": 35, "double hit chance": 18, "double loot": random.randint(1,4), "chance": 45, "find": 10},
+        "undead guard": {"health": random.randint(27,35), "damage": random.randint(6,11), "dodge chance": 17, "double hit chance": random.randint(11,15), "double loot": random.randint(1,2), "chance": 57, "find": 4},
+        "giant spider": {"health": random.randint(13,20), "damage": random.randint(3,6), "dodge chance": random.randint(24,34), "double hit chance": random.randint(11,18), "double loot": random.randint(1,2), "chance": 68, "find": 5},
+        "giant armored spider": {"health": random.randint(17,26), "damage": random.randint(3,7), "dodge chance": random.randint(19,31), "double hit chance": random.randint(11,16), "double loot": random.randint(1,1), "chance": 77, "find": 4},
+        "goblin": {"health": random.randint(13,17), "damage": random.randint(2,5), "dodge chance": random.randint(13,23), "double hit chance": random.randint(13,16), "double loot": random.randint(1,4), "chance": 90, "find": 7},
+        "wizard": {"health": random.randint(36,44), "damage": random.randint(7,14), "dodge chance": random.randint(13,16), "double hit chance": random.randint(11,15), "double loot": random.randint(1,1), "chance": 97, "find": 2},
+        "King's Guard": {"health": random.randint(45,53), "damage": random.randint(13,17), "dodge chance": random.randint(3,7), "double hit chance": random.randint(11,15), "double loot": random.randint(1,1), "chance": 100, "find": 1},
     }
     baddie = random.randint(1, 100)
 
@@ -110,8 +211,11 @@ def dungeonRun():
                     if i.playerHealth['hp'] <= 0:
                         i.playerHealth['hp'] = 0
                         print(f"The {baddieName} hit you for {baddieOne['damage']} hp! You died!")
-                        s.updateSave()
                         i.playerHealth['hp'] = 40
+                        i.playerPotions["damage-pot"] = 0
+                        i.playerPotions["dodge"] = 0
+                        i.playerPotions["restoration"] = 5
+                        s.newSave()
                         exit()
                     else:
                         print(f"The {baddieName} hit you for {baddieOne['damage']} hp! You have {i.playerHealth['hp']} hp left!")
@@ -124,7 +228,15 @@ def dungeonRun():
                 print(f'You swung at the {baddieName}, but it dodged! It has {baddieOne['health']} hp left!')
             else:
                 if i.playerHealth['hp'] > 0 and baddieOne['health'] > 0:
-                    baddieOne['health'] -= i.playerDamage['damage'] + a
+                    if i.playerItems["uses"] == None or i.playerItemsState == False:
+                        if i.playerItems["uses"] is not None:
+                            itemRecharge()
+                        extraDamage = 0 #have it already set to 0 at the beginning, change if anything changes, find a way to take the item name then find its damage
+                    else:
+                        extraDamage = pwr()
+                        itemDegrade()
+                    
+                    baddieOne['health'] -= i.playerDamage['damage'] + a + extraDamage
                     if baddieOne['health'] <= 0:
                         baddieOne['health'] = 0
                         drop = i.findAPotion(drops)
@@ -134,7 +246,6 @@ def dungeonRun():
                             drop.split()
                             drop2.split()
                             if drop[1] is drop2[1]:
-                                print("success!")
                                 drop = check(drop[0])
                                 drop1 = check(drop2[0])
                                 drop = str(drop+drop1)+" "+drop2[2:]
@@ -143,18 +254,24 @@ def dungeonRun():
                                 print(f'You killed the {baddieName}! You got {drop} and {drop2}!')
                         else:
                             print(f'You killed the {baddieName}! You got {drop}!')
+                        # find = random.randint(1, baddieOne["find"])
+                        find = 1
+                        if find == 1:
+                            replaceItem()
                         print()
                         i.playerHealth['hp'] = 40
                         dungeonRun()
                     else:
                         print(f"You hit the {baddieName} for {i.playerDamage['damage']} hp! It now has {baddieOne['health']} hp left!")
         
+        
+        # fix so you can say no
         # appears if player is at 10 or lower HP
         def restoreHealth():
             if i.playerHealth['hp'] <= 15:
-                print("Would you like to drink a health potion?")
-                playerChoice = input("")
-                if "yes" or "y" in playerChoice.lower():
+                print("You are at low health.\n1. Drink a heath potion\n2.Continue the fight")
+                playerChoice = input("Your Choice: ")
+                if playerChoice == "1":
                     restor = random.randint(5,15)
                     if restor >= 13:
                         restor += random.randint(0,5)
@@ -162,6 +279,8 @@ def dungeonRun():
                     
                     print(f"You restored {restor} hp! You now have {i.playerHealth['hp']} hp!")
                     i.playerPotions['restoration'] = potionChecker("Restoration Potion", i.playerPotions['restoration'])
+                elif playerChoice == "2":
+                    pass
                 else:
                     print("Please enter a valid choice")
                     restoreHealth()
