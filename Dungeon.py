@@ -8,59 +8,19 @@ import Save as s
 """
 ideas:
 
-magic items, certain amounts of uses, recharges or one time charge 
-    
-def itemReset():
-    i.playerItems["charge"] = None
-    i.playerItems["uses"] = None
-    i.playerItems["name"] = None
-    i.playerItemsState = False
-    i.playerItemsModifier = None
-
-def equipItem():
-    i.playerItemsState = True
-
-def unequipItem():
-    i.playerItemsState = False
-
-def findItem(itemNumber):
-    i.playerItems["charge"] = i.Items[itemNumber]["charge"]
-    i.playerItems["uses"] = i.Items[itemNumber]["uses"]
-    i.playerItems["name"] = i.Items[itemNumber]["name"]
-    i.playerItemModifier = random.randint(1,7)
-
-def pwr():
-    return i.ItemPowers[i.playerItemModifier]["damage"]
-
-
-def itemDegrade(itemName):
-    i.playerItems[itemName]["charge"] -= 1
-    if i.playerItems[itemName]["charge"] == 0:
-        i.playerItems[itemName]["state"] = False
-        i.playerItems[itemName]["uses"] -= 1
-        if i.playerItems[itemName]["uses"] <= 0:
-            print(f"Your {i.playerItems["name"]} broke!)
-            itemReset(itemName)
-            
-
-if i.playerItems = None or i.playerItemsState = False:
-    extraDamage = 0 #have it already set to 0 at the beginning, change if anything changes, find a way to take the item name then find its damage
-else:
-    extraDamage = pwr()
-
-if state = true then add damage boost/bonus thingy
-
 rename potions to other things for more depth
 
 add a longer description of fights
 """
 
+# prints item name, charges, uses, whether it is being used or not, and its damage boost
 def readItemStats():
     if i.playerItems["name"] == None:
         print("You do not have an item equipped at this time.")
     else:
         print(f"You currently have a {i.playerItems["name"]} equipped.\nCharges: {i.playerItems["charge"]}\nUses: {i.playerItems["uses"]}\nCurrently using?: {i.playerItemsState}\nDamage:{i.ItemPowers[int(i.playerItemModifier)]["damage"]}\n")
 
+# resets user's chosen item to none
 def itemReset():
     i.playerItems["charge"] = None
     i.playerItems["uses"] = None
@@ -68,24 +28,29 @@ def itemReset():
     i.playerItemsState = False
     i.playerItemModifier = None
 
+# allows the item to be used to fight
 def equipItem():
     i.playerItemsState = True
     print(f"You equipped your {i.playerItems["name"]}!\n\n")
 
+# disables the usage of the item to fight
 def unequipItem():
     i.playerItemsState = False
     print(f"You unequipped your {i.playerItems["name"]}!\n\n")
 
+# finds the item and stores it in the user's info
 def findItem(itemNumber):
     i.playerItems["charge"] = i.Items[itemNumber]["charge"]
     i.playerItems["uses"] = i.Items[itemNumber]["uses"]
     i.playerItems["name"] = i.Items[itemNumber]["name"]
     i.playerItemModifier = random.randint(1,4)
 
+# returns the damage boost
 def pwr():
     return i.ItemPowers[int(i.playerItemModifier)]["damage"]
 
-
+# adds a degrading feature to the item, after a certain amount of time the item will have to recharge and lose a useage level
+# also adds a feature to make the item break, using itemReset
 def itemDegrade():
     i.playerItems["charge"] -= 1
     if i.playerItems["charge"] == 0:
@@ -96,7 +61,7 @@ def itemDegrade():
         print("Your item has run out of charges and is now in a recharging state.")
         i.playerItemsState = False
         
-
+# when dormant, the item will recharge. Once recharged, a message will be printed.
 def itemRecharge():
     i.playerItems["charge"] += 1
     if i.playerItems["charge"] == 20:
@@ -112,6 +77,7 @@ def itemRecharge():
             print("Please enter a valid choice.\n")
             itemRecharge()
 
+# the function for getting an item from killing an enemy
 def replaceItem(a=random.randint(1,4)):
     itemNumber = a
     print(f"You found a {i.Items[itemNumber]["name"]}! It has {i.Items[itemNumber]["charge"]} charges left and {i.Items[itemNumber]["uses"]} uses left!")
@@ -129,6 +95,14 @@ def replaceItem(a=random.randint(1,4)):
         print("Please enter a valid choice.\n")
         replaceItem(a)
 
+# full dungeon function, including:
+#   - Enemy information
+#   - Enemy choosing
+#   - potions drinking and obtaining obtaining
+#   - attack process for player and enemy
+#   - restoring health if lower than 15 health
+#   - dungeon check in after every action
+#   - function to turn saved information back to integers
 def dungeonRun():
     
 		# list of enemies, including its health, damage, dodge chance, double hit chance, double loot (will eventually use or remove) and chance of encountering
@@ -205,7 +179,6 @@ def dungeonRun():
                 else:
                     num += 1
 
-        
         # checks if player is out of potions (can merge with potionChecker)
         
         def potionOut(potionName):
@@ -229,6 +202,7 @@ def dungeonRun():
                         i.playerPotions["damage-pot"] = 0
                         i.playerPotions["dodge"] = 0
                         i.playerPotions["restoration"] = 5
+                        itemReset()
                         s.died()
                         exit()
                     else:
@@ -300,7 +274,8 @@ def dungeonRun():
                     print("Please enter a valid choice\n")
                     restoreHealth()
                     
-        
+        # turned the process for drinking potions into a function, checks to see if player has the potions then adds the bonus to
+        # the player's stats, then prints the usage of the potions
         def drinkPotions():
             
             print(f"You have {i.playerPotions["damage-pot"]} Damage Up potions, {i.playerPotions["dodge"]} Dodge Chance Up potions, and {i.playerPotions["restoration"]} Restoration potions")
@@ -333,6 +308,7 @@ def dungeonRun():
                 print("Please enter a valid choice.\n")
                 drinkPotions()
         
+        # turns information saved from loading the save file
         def turnInt():
             i.playerPotions["damage-pot"] = int(i.playerPotions["damage-pot"])
             i.playerPotions["dodge"] = int(i.playerPotions["dodge"])
@@ -356,7 +332,6 @@ def dungeonRun():
             elif playerChoice == "1":
                 print()
                 def attackStuff (x, y):
-                    
                     for _ in range(x):
                         playerAttack(i.playerBoosts["damage up"])
                     for _ in range(y):
@@ -396,7 +371,7 @@ def dungeonRun():
         dungeonCheckIn()
 
                 
-
+# main menu function
 def mainScreen():
     print("1. Load a save\n2. Create a new save\n3. Continue\n4. Exit\n\nNOTE: Making a new save will overwrite your old save. It will delete all progress made.")
     choice = input("Your choice: ")
