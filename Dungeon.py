@@ -107,15 +107,15 @@ def dungeonRun():
     
 		# list of enemies, including its health, damage, dodge chance, double hit chance, double loot (will eventually use or remove) and chance of encountering
     enemy = {
-        "undead": {"health": random.randint(23,30), "damage": random.randint(2,5), "dodge chance": 13, "double hit chance": 3, "double loot": random.randint(1,4), "chance": 16, "find": 7},
-        "bandit": {"health": random.randint(17, 25), "damage": random.randint(4,7), "dodge chance": random.randint(10,23), "double hit chance": random.randint(12,17), "double loot": random.randint(1,3), "chance": 30, "find": 6}, 
-        "snake": {"health": random.randint(7,15), "damage": random.randint(1,3), "dodge chance": 35, "double hit chance": 18, "double loot": random.randint(1,4), "chance": 45, "find": 10},
-        "undead guard": {"health": random.randint(27,35), "damage": random.randint(6,11), "dodge chance": 17, "double hit chance": random.randint(11,15), "double loot": random.randint(1,2), "chance": 57, "find": 4},
-        "giant spider": {"health": random.randint(13,20), "damage": random.randint(3,6), "dodge chance": random.randint(24,34), "double hit chance": random.randint(11,18), "double loot": random.randint(1,2), "chance": 68, "find": 5},
-        "giant armored spider": {"health": random.randint(17,26), "damage": random.randint(3,7), "dodge chance": random.randint(19,31), "double hit chance": random.randint(11,16), "double loot": random.randint(1,1), "chance": 77, "find": 4},
-        "goblin": {"health": random.randint(13,17), "damage": random.randint(2,5), "dodge chance": random.randint(13,23), "double hit chance": random.randint(13,16), "double loot": random.randint(1,4), "chance": 90, "find": 7},
-        "wizard": {"health": random.randint(36,44), "damage": random.randint(7,14), "dodge chance": random.randint(13,16), "double hit chance": random.randint(11,15), "double loot": random.randint(1,1), "chance": 97, "find": 2},
-        "King's Guard": {"health": random.randint(45,53), "damage": random.randint(13,17), "dodge chance": random.randint(3,7), "double hit chance": random.randint(11,15), "double loot": random.randint(1,1), "chance": 100, "find": 1},
+        "undead": {"health": random.randint(23,32), "damage": random.randint(2,5), "dodge chance": 13, "double hit chance": 3, "double loot": random.randint(1,4), "chance": 16, "find": 7},
+        "bandit": {"health": random.randint(15, 35), "damage": random.randint(4,7), "dodge chance": random.randint(10,23), "double hit chance": random.randint(12,17), "double loot": random.randint(1,3), "chance": 30, "find": 6}, 
+        "snake": {"health": random.randint(10,15), "damage": random.randint(1,3), "dodge chance": 35, "double hit chance": 18, "double loot": random.randint(1,4), "chance": 45, "find": 10},
+        "undead guard": {"health": random.randint(32,40), "damage": random.randint(6,11), "dodge chance": 17, "double hit chance": random.randint(11,15), "double loot": random.randint(1,2), "chance": 57, "find": 4},
+        "giant spider": {"health": random.randint(20,35), "damage": random.randint(3,6), "dodge chance": random.randint(24,34), "double hit chance": random.randint(11,18), "double loot": random.randint(1,2), "chance": 68, "find": 5},
+        "giant armored spider": {"health": random.randint(28,40), "damage": random.randint(3,7), "dodge chance": random.randint(19,31), "double hit chance": random.randint(11,16), "double loot": random.randint(1,1), "chance": 77, "find": 4},
+        "goblin": {"health": random.randint(10,15), "damage": random.randint(2,5), "dodge chance": random.randint(13,23), "double hit chance": random.randint(13,16), "double loot": random.randint(1,4), "chance": 90, "find": 7},
+        "wizard": {"health": random.randint(32,45), "damage": random.randint(7,14), "dodge chance": random.randint(13,16), "double hit chance": random.randint(11,15), "double loot": random.randint(1,1), "chance": 97, "find": 2},
+        "King's Guard": {"health": random.randint(45,60), "damage": random.randint(13,17), "dodge chance": random.randint(3,7), "double hit chance": random.randint(11,15), "double loot": random.randint(1,1), "chance": 100, "find": 1},
     }
     baddie = random.randint(1, 100)
 
@@ -287,13 +287,13 @@ def dungeonRun():
                 if potionOut(i.potionNamesReal[0]) == True:
                     i.playerBoosts["damage up"] = random.randint(3,6)
                     print("You boosted your damage by "+str(i.playerBoosts["damage up"])+" points!\n")
-                i.playerPotions['damage-pot'] = int(potionChecker("Damage Potion", int(i.playerPotions['damage-pot'])))
+                i.playerPotions['damage-pot'] = int(potionChecker("Damage Potion", i.playerPotions['damage-pot']))
 
             elif playerChoice == "2":
                 if potionOut(i.potionNamesReal[1]) == True:
                     i.playerBoosts["dodge up"] = random.randint(5,9)
                     print("You boosted your dodge stat by "+str(i.playerBoosts["dodge up"])+" points!\n")
-                i.playerPotions['dodge'] = int(potionChecker("Dodge Up Potion", int(i.playerPotions['dodge'])))
+                i.playerPotions['dodge'] = int(potionChecker("Dodge Up Potion", i.playerPotions['dodge']))
 
             elif playerChoice == "3": 
                 if potionOut(i.potionNamesReal[2]) == True:
@@ -302,7 +302,7 @@ def dungeonRun():
                         restor += random.randint(0,5)
                     i.playerHealth['hp'] += restor
                     print(f"You restored {restor} hp! You now have {i.playerHealth['hp']} hp!\n")
-                i.playerPotions['restoration'] = int(potionChecker("Restoration Potion", int(i.playerPotions['restoration'])))
+                i.playerPotions['restoration'] = int(potionChecker("Restoration Potion", i.playerPotions['restoration']))
                 
             elif playerChoice == "4":
                 dungeonCheckIn()
@@ -316,7 +316,9 @@ def dungeonRun():
             i.playerPotions["damage-pot"] = int(i.playerPotions["damage-pot"])
             i.playerPotions["dodge"] = int(i.playerPotions["dodge"])
             i.playerPotions["restoration"] = int(i.playerPotions["restoration"])
-            if i.playerItems["name"] is not None:
+            if i.playerItems["name"] == "None" or i.playerItems["name"] is None:
+                pass
+            else:
                 i.playerItems["charge"] = int(i.playerItems["charge"])
                 i.playerItems["recharges"] = int(i.playerItems["recharges"])
                 i.playerItemModifier = int(i.playerItemModifier)
