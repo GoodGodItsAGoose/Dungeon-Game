@@ -10,6 +10,10 @@ ideas:
 
 rename potions to other things for more depth
 
+story bits "You traveled further down the tunnels and turned a corner, coming across a {enemyname}!"
+
+attack > menu > continue creates a new enemy (make it so it doesnt)
+
 add a longer description of fights
 """
 
@@ -18,16 +22,17 @@ def readItemStats():
     t.sleep(0.1)
     if i.playerItems["name"] == None:
         print()
-        print("\nYou do not have an item equipped at this time.\n")
+        print("You do not have an item equipped at this time.\n")
     else:
         print()
-        print(f"You currently have a {i.playerItems["name"]} equipped.\nCharges: {i.playerItems["charge"]}\nRecharges: {i.playerItems["recharges"]}\nCurrently using?: {i.playerItemsState}\nDamage: {i.ItemPowers[int(i.playerItemModifier)]["damage"]}\n")
+        print(f"You currently have a {i.playerItems["name"]} equipped.\nCurrent Charge Level: {i.playerItems["charge"]}\nRecharges: {i.playerItems["recharges"]}\nCurrently using?: {i.playerItemsState}\nDamage: {i.ItemPowers[int(i.playerItemModifier)]["damage"]}\nMax Charge Level: {i.playerItems["max charges"]}\n")
 
 # resets user's chosen item to none
 def itemReset():
     i.playerItems["charge"] = None
     i.playerItems["recharges"] = None
     i.playerItems["name"] = None
+    i.playerItems["max charges"] = None
     i.playerItemsState = False
     i.playerItemModifier = None
 
@@ -48,6 +53,7 @@ def findItem(itemNumber, itemModifier=random.randint(1,4)):
     i.playerItems["charge"] = i.Items[itemNumber]["charge"]
     i.playerItems["recharges"] = i.Items[itemNumber]["recharges"]
     i.playerItems["name"] = i.Items[itemNumber]["name"]
+    i.playerItems["max charges"] = i.Items[itemNumber]["max charges"]
     i.playerItemModifier = itemModifier
 
 # returns the damage boost
@@ -62,17 +68,24 @@ def itemDegrade():
     if i.playerItems["charge"] == 0:
         i.playerItems["recharges"] -= 1
         if i.playerItems["recharges"] <= 0:
+            print("\n-------\n")
+            t.sleep(0.2)
             print(f"Your {i.playerItems["name"]} broke!\n")
+            t.sleep(0.5)
+            print("-------\n")
+            t.sleep(0.3)
             itemReset()
-        print("Your item has run out of charges and is now in a recharging state.")
-        i.playerItemsState = False
+        else:
+            print("Your item has run out of charges and is now in a recharging state.")
+            i.playerItemsState = False
         
 # when dormant, the item will recharge. Once recharged, a message will be printed.
 def itemRecharge():
-    t.sleep(0.1)
     i.playerItems["charge"] += 1
-    if i.playerItems["charge"] == 20:
-        print(f"Your {i.playerItems["name"]} has reached its charge limit, with {i.playerItems["recharges"]} recharges left.\n")
+    t.sleep(0.1)
+    if i.playerItems["charge"] == i.playerItems["max charges"]:
+        print()
+        print(f"Your {i.playerItems["name"]} has reached its max charge level of {i.playerItems["max charges"]} charges. It has {i.playerItems["recharges"]} recharges left.\n")
         print("1. Re-equip\n2. Continue the fight\n")
         choice = input("Your choice: ")
         if choice == "1":
@@ -94,9 +107,9 @@ def replaceItem(a=random.randint(1,4)):
     print(f"You found a {i.Items[itemNumber]["name"]}! It has {i.Items[itemNumber]["charge"]} charges left and {i.Items[itemNumber]["recharges"]} recharges left. It does {i.ItemPowers[itemModifier]["damage"]} extra damage.")
     print("1. Take it\n2. Leave it\n3. Check your current item's stats\n\nNOTE: If you take the item and you already have an item, the new item will replace the old one.")
     choice = input("Your choice: ")
+    print()
     if choice == "1":
         t.sleep(0.1)
-        print()
         print("Collected item.")
         print()
         t.sleep(0.1)
@@ -209,7 +222,7 @@ def dungeonRun():
             t.sleep(0.1)
             dodgeChance = random.randint(1,100)
             if dodgeChance <= 31 + b:
-                print(f"The {baddieName} swung at you, but you dodged!\n")
+                print(f"The {baddieName} swung at you, but you dodged!")
             else:
                 # if the player has 0 or less health and enemy has more than 0 health, the fight will end, player's health will be set to 0 if less than 0
                 if i.playerHealth['hp'] > 0 and baddieOne['health'] > 0:
@@ -237,9 +250,7 @@ def dungeonRun():
                 print(f'You swung at the {baddieName}, but it dodged! It has {baddieOne['health']} hp left!')
             else:
                 if i.playerHealth['hp'] > 0 and baddieOne['health'] > 0:
-                    if i.playerItems["recharges"] == None or i.playerItemsState == False:
-                        if i.playerItems["recharges"] is not None and i.playerItemsState == False:
-                            itemRecharge()
+                    if i.playerItemsState == False or i.playerItems["recharges"] == None:
                         extraDamage = 0 #have it already set to 0 at the beginning, change if anything changes, find a way to take the item name then find its damage
                     else:
                         extraDamage = pwr()
@@ -271,10 +282,15 @@ def dungeonRun():
                         if find == 1:
                             replaceItem()
                         
+                        if i.playerItems["recharges"] is not None and i.playerItemsState == False and i.playerItems["charge"] <= i.playerItems["max charges"]:
+                            itemRecharge()
+                        
                         i.playerHealth['hp'] = 40
                         dungeonRun()
                     else:
                         print(f"You hit the {baddieName} for {totalDamage} hp! It now has {baddieOne['health']} hp left!")
+                        if i.playerItems["recharges"] is not None and i.playerItemsState == False and i.playerItems["charge"] <= i.playerItems["max charges"]:
+                            itemRecharge()
         
         
         # fix so you can say no
@@ -309,19 +325,20 @@ def dungeonRun():
             print("\n1. Drink a Damage Up Potion\n2. Drink a Dodge Chance Up Potion\n3. Drink a Restoration Potion\n4. Go back to the Attack Menu\n")
             t.sleep(0.1)
             print("Note that boosting potions last for 1 attack.\n")
-            playerChoice = input("Your choice:")
+            playerChoice = input("Your choice: ")
             t.sleep(0.5)
+            print()
             
             if playerChoice == "1":
                 if potionOut(i.potionNamesReal[0]) == True:
-                    i.playerBoosts["damage up"] = random.randint(3,6)
-                    print("You boosted your damage by "+str(i.playerBoosts["damage up"])+" points!\n")
+                    i.playerBoosts["damage up"] += random.randint(3,6)
+                    print("You boosted your damage to "+str(i.playerBoosts["damage up"]+i.playerStats["stats"]["damage"])+" points!")
                 i.playerPotions['damage-pot'] = int(potionChecker("Damage Potion", i.playerPotions['damage-pot']))
 
             elif playerChoice == "2":
                 if potionOut(i.potionNamesReal[1]) == True:
-                    i.playerBoosts["dodge up"] = random.randint(5,9)
-                    print("You boosted your dodge stat by "+str(i.playerBoosts["dodge up"])+" points!\n")
+                    i.playerBoosts["dodge up"] += random.randint(5,9)
+                    print("You boosted your dodge stat to "+str(i.playerBoosts["dodge up"]+i.playerStats["stats"]["dodge chance"])+" points!")
                 i.playerPotions['dodge'] = int(potionChecker("Dodge Up Potion", i.playerPotions['dodge']))
 
             elif playerChoice == "3": 
@@ -330,7 +347,7 @@ def dungeonRun():
                     if restor >= 13:
                         restor += random.randint(0,5)
                     i.playerHealth['hp'] += restor
-                    print(f"You restored {restor} hp! You now have {i.playerHealth['hp']} hp!\n")
+                    print(f"You restored {restor} hp! You now have {i.playerHealth['hp']} hp!")
                 i.playerPotions['restoration'] = int(potionChecker("Restoration Potion", i.playerPotions['restoration']))
                 
             elif playerChoice == "4":
@@ -358,9 +375,6 @@ def dungeonRun():
             print("1. Attack\n2. Drink a potion\n3. Equip or unequip your weapon\n4. Check item\n5. Go to menu\n")
             playerChoice = input("Your choice: ")
             t.sleep(0.5)
-            # resets boosts to 0
-            i.playerBoosts["damage up"] = 0
-            i.playerBoosts["dodge up"] = 0
             if playerChoice == "2": #wont allow u to attack
                 drinkPotions()
             # attack just goes through both enemy and player attacks   
@@ -369,8 +383,10 @@ def dungeonRun():
                 def attackStuff (x, y):
                     for _ in range(x):
                         playerAttack(i.playerBoosts["damage up"])
+                        i.playerBoosts["damage up"] = 0
                     for _ in range(y):
                         enemyAttack(i.playerBoosts["dodge up"])
+                        i.playerBoosts["dodge up"] = 0
                     print()
                     dungeonCheckIn()
                     
