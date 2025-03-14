@@ -7,12 +7,15 @@ armor = [
 info = [
     "rating", "durability", "name"
 ]
-def armorCheck(thing, a=1):
-    num = 0
+def armorCheck(thing, a=1, collect=False):
     for _ in range(3):
         num1 = 1
+        num = 0
         for _ in range(3):
-            if i.playerStats[armor[num]][info[num1-1]] == "None" or i.playerStats[armor[num]][info[num1-1]] == None:
+            if collect == True:
+                i.playerStats[armor[num]][info[num1-1]] = thing[info[num1-1]]
+                num += 1
+            elif i.playerStats[armor[num]][info[num1-1]] == "None" or i.playerStats[armor[num]][info[num1-1]] == None:
                 i.playerStats[armor[num]][info[num1-1]] = None
                 num1 += 1
             else:
@@ -25,7 +28,7 @@ def armorCheck(thing, a=1):
                 else:
                     i.playerStats[armor[num]][info[num1-1]] = None
                     num1 += 1
-        num += 1
+            num += 1
 
 # loading the last save's info from saves.txt
 def loadSave():
@@ -39,8 +42,6 @@ def loadSave():
     i.playerPotions["damage-pot"] = int(results[str(len(results)-1)]["damage-pot"])
     i.playerPotions["dodge"] = int(results[str(len(results)-1)]["dodge"])
     i.playerPotions["restoration"] = int(results[str(len(results)-1)]["restoration"])
-    
-    armorCheck(results[str(len(results)-1)])
 
     if results[str(len(results)-1)]["charge"] == "None" or results[str(len(results)-1)]["charge"] == None:
         i.playerItems["charge"] = None
@@ -78,7 +79,6 @@ def updateSave():
     for _ in range(26):
         saveStats = str(saveStats).replace(removes[num], "")
         num += 1
-    print(saveStats)
     with open("DungeonGame/saves.txt", "a") as f:
         f.write("\n")
         f.write(f"{number}, {saveStats}")
