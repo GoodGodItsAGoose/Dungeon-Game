@@ -119,8 +119,29 @@ playerStats = {
     "potions": {"damage-pot": 0, "dodge": 0, "restoration": 5},
     "item": {"charge": None, "recharges": None, "name": None, "max charges": None},
     "state": False,
-    "modifier": None
+    "modifier": None,
+    "exp": 0,
+    "level": 1,
+    "leggings": {"rating": None, "durability": None, "name": None}, 
+    "armbands": {"rating": None, "durability": None, "name": None}, 
+    "chestplate": {"rating": None, "durability": None, "name": None}
 }
+
+"""
+
+"leggings", "rating", "durability", "name", "armbands", "chestplate"
+i.playerStats["leggings"]["1 rating"] = results[str(len(results)-1)]["1 rating"]
+i.playerStats["leggings"]["1 durability"] = results[str(len(results)-1)]["1 durability"]
+i.playerStats["leggings"]["1 name"] = results[str(len(results)-1)]["1 name"]
+
+i.playerStats["armbands"]["2 rating"] = results[str(len(results)-1)]["2 rating"]
+i.playerStats["armbands"]["2 durability"] = results[str(len(results)-1)]["2 durability"]
+i.playerStats["armbands"]["2 name"] = results[str(len(results)-1)]["2 name"]
+
+i.playerStats["chestplate"]["3 rating"] = results[str(len(results)-1)]["3 rating"]
+i.playerStats["chestplate"]["3 durability"] = results[str(len(results)-1)]["3 durability"]
+i.playerStats["chestplate"]["3 name"] = results[str(len(results)-1)]["3 name"]
+"""
 
 #name just used for text
 
@@ -130,6 +151,36 @@ Items = {
     2: {"charge": random.randint(5,25), "recharges": random.randint(2,5), "name": "Staff", "max charges": random.randint(25,30)},
     3: {"charge": random.randint(10,20), "recharges": random.randint(1,3), "name": "Shortsword", "max charges": random.randint(23,25)},
     4: {"charge": random.randint(5,10), "recharges": random.randint(3,5), "name": "Sickle", "max charges": random.randint(13,17)}
+}
+
+Armor = {
+    1:{
+        1: {"rating": random.randint(2,4), "durability": random.randint(50,70), "name": "Leather Breastplate", "level req": 1},
+        2: {"rating": random.randint(2,3), "durability": random.randint(40,60), "name": "Padded Leather Chestplate", "level req": 1},
+        3: {"rating": random.randint(4,8), "durability": random.randint(140,170), "name": "Chainmail Chestplate", "level req": 5},
+        4: {"rating": random.randint(4,6), "durability": random.randint(120,150), "name": "Steel Breastplate", "level req": 3},
+        5: {"rating": random.randint(8,10), "durability": random.randint(180,220), "name": "Tempered Thalassian Steel Chestplate", "level req": 7},
+        },
+    2: {
+        1: {"rating": random.randint(1,2), "durability": random.randint(70,90), "name": "Padded Leather Armbands", "level req": 1},
+        2: {"rating": random.randint(2,4), "durability": random.randint(85,110), "name": "Leather Armbands", "level req": 1},
+        3: {"rating": random.randint(3,5), "durability": random.randint(150,2000), "name": "Chainmail Armbands", "level req": 5},
+        4: {"rating": random.randint(2,4), "durability": random.randint(150,170), "name": "Steel Armbands", "level req": 3},
+        5: {"rating": random.randint(3,6), "durability": random.randint(200,240), "name": "Tempered Thalassian Steel Armbands", "level req": 7},
+        },
+    3: {
+        1: {"rating": random.randint(2,3), "durability": random.randint(45,65), "name": "Padded Leather Armbands", "level req": 1},
+        2: {"rating": random.randint(1,2), "durability": random.randint(70,90), "name": "Leather Armbands", "level req": 1},
+        3: {"rating": random.randint(4,7), "durability": random.randint(120,160), "name": "Chainmail Armbands", "level req": 5},
+        4: {"rating": random.randint(2,5), "durability": random.randint(130,160), "name": "Steel Armbands", "level req": 3},
+        5: {"rating": random.randint(5,8), "durability": random.randint(150,210), "name": "Tempered Thalassian Steel Armbands", "level req": 7},
+        },
+    4: {
+        1: "leggings",
+        2: "armbands",
+        3: "chestplate"
+        }
+    
 }
 
 # item bonus damages
@@ -150,6 +201,8 @@ playerBoosts = playerStats["ups"]
 playerItems = playerStats["item"]
 playerItemsState = playerStats["state"]
 playerItemModifier = playerStats["modifier"]
+playerExp = playerStats["exp"]
+playerLevel = playerStats["level"]
 
 # lists for potion-related code
 potionNames = ["Damage Up Potion", "Dodge Up Potion", "Restoration Potion"]
