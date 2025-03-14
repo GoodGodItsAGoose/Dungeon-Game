@@ -5,6 +5,16 @@ import Save as s
 
 # make enemies harder, but still survivable / add difficulty scaler?
 #update saves
+
+"""
+
+if [armorName] == None:
+	print("no armor")
+else:
+	print(armorName)
+
+"""
+
 """
 ideas:
 
