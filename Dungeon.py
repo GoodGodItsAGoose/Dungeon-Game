@@ -13,6 +13,11 @@ if [armorName] == None:
 else:
 	print(armorName)
 
+if i.playerStats[s.armor[armorType]]["name"] == None:
+    print("You do not currently have {s.armor[armorType]}.)
+else:
+    print()
+
 """
 
 """
@@ -37,8 +42,20 @@ add a longer description of fights
 level up system with benefited health, damage, dodge up, but also stronger enemies (can add level locked items)
 """
 
+def runThruArmor(armorType, a="", b=False):
+    if i.playerStats[s.armor[armorType]]["name"] == None:
+        if b == False:
+            print(f"You do not currently have {s.armor[armorType]}.\n")
+        else:
+            return False
+    else:
+        if b == False:
+            print(f"You currently are wearing{a} {i.playerStats[s.armor[armorType-1]]["name"]}.\nArmor Durability: {i.playerStats[s.armor[armorType-1]]["durability"]}\nArmor Rating: {i.playerStats[s.armor[armorType-1]]["rating"]}\n")
+        else:
+            return False
+
 # prints item name, charges, how many times it can recharges, whether it is being used or not, and its damage boost
-def readItemStats(a, armorType=1, armorNumber=1):
+def readItemStats(a=1, armorType=1):
     t.sleep(0.1)
     if a == 1:
         if i.playerItems["name"] == None:
@@ -46,15 +63,36 @@ def readItemStats(a, armorType=1, armorNumber=1):
             print("You do not have an item equipped at this time.\n")
         else:
             print()
-            print(f"You currently have a {i.playerItems["name"]} equipped.\nCurrent Charge Level: {i.playerItems["charge"]}\nRecharges: {i.playerItems["recharges"]}\nCurrently using?: {i.playerItemsState}\nDamage: {i.ItemPowers[int(i.playerItemModifier)]["damage"]}\nMax Charge Level: {i.playerItems["max charges"]}\n")
+            if armorType == 3:
+                print(f"You currently have a {i.playerItems["name"]} equipped.\nCurrent Charge Level: {i.playerItems["charge"]}\nRecharges: {i.playerItems["recharges"]}\nCurrently using?: {i.playerItemsState}\nDamage: {i.ItemPowers[int(i.playerItemModifier)]["damage"]}\nMax Charge Level: {i.playerItems["max charges"]}\n")
+            else:
+                print(f"You currently have {i.playerItems["name"]} equipped.\nCurrent Charge Level: {i.playerItems["charge"]}\nRecharges: {i.playerItems["recharges"]}\nCurrently using?: {i.playerItemsState}\nDamage: {i.ItemPowers[int(i.playerItemModifier)]["damage"]}\nMax Charge Level: {i.playerItems["max charges"]}\n")
     else:
-        if i.playerStats[s.armor[armorType-1]]["name"] == None:
-            print()
-            print(f"You are not currently wearing any {s.armor[armorType-1]} at this time.\n")
+        if a == 3:
+            t.sleep(0.1)
+            if armorType == 3:
+                runThruArmor(armorType-1, " a")
+            else:
+                runThruArmor(armorType-1)
         else:
-            print()
-            print(f"You currently are wearing a {i.playerStats[s.armor[armorType-1]]["name"]}.\nArmor Durability: {i.playerStats[s.armor[armorType-1]]["durability"]}\nArmor Rating: {i.playerStats[s.armor[armorType-1]]["rating"]}")
-
+            t.sleep(0.1)
+            print("1. Check leggings\n2. Check armbands\n3. Check chestplate\n4. Return to Battle Menu")
+            choice = input("Your choice: ")
+            t.sleep(0.1)
+            if choice == "1":
+                runThruArmor(0)
+                readItemStats(a)
+            elif choice == "2":
+                runThruArmor(1)
+                readItemStats(a)
+            elif choice == "3":
+                runThruArmor(2, " a")
+                readItemStats(a)
+            elif choice == "4":
+                pass
+            else:
+                print("Please enter a valid choice.\n")
+                readItemStats(a)
 # resets user's chosen item to none
 def itemReset(armor=1):
     if armor == 1:
@@ -96,12 +134,10 @@ def findItem(itemNumber=None, itemModifier=random.randint(1,4), armor=1, armorTy
         i.playerItems["max charges"] = i.Items[itemNumber]["max charges"]
         i.playerItemModifier = itemModifier
     else:
-        if i.Armor[armorType][armorNumber]["level req"] <= i.playerLevel:
-            pass
-        else:
-            num = 0
-            for _ in range(3):
-                s.armorCheck(i.playerStats[s.armor[num]])
+        num = 0
+        for _ in range(3):
+            s.armorCheck(i.playerStats[s.armor[num]], collect=True)
+            num += 1
 
 # returns the damage boost
 def pwr():
@@ -109,7 +145,7 @@ def pwr():
 
 # adds a degrading feature to the item, after a certain amount of time the item will have to recharge and lose a useage level
 # also adds a feature to make the item break, using itemReset
-def itemDegrade(armor=1, armorType=1, armorNumber=1):
+def itemDegrade(armor=1, armorType=1):
     if armor == 1:
         t.sleep(0.1)
         i.playerItems["charge"] -= 1
@@ -159,18 +195,21 @@ def itemRecharge():
 
 # the function for getting an item from killing an enemy
 def replaceItem(a=random.randint(1,4), armorType=random.randint(1,3), armorNumber=random.randint(1,5), armor=1):
+    print(i.Armor[armorType][armorNumber])
     if armor == 1:
         itemNumber = a
         itemModifier = random.randint(1,4)
 
     t.sleep(0.1)
     if armor == 1:
+        b = 1
         print(f"You found a {i.Items[itemNumber]["name"]}! It has {i.Items[itemNumber]["charge"]} charges left and {i.Items[itemNumber]["recharges"]} recharges left. It does {i.ItemPowers[itemModifier]["damage"]} extra damage.")
     else:
         if i.Armor[armorType][armorNumber]["level req"] <= i.playerStats["level"]:
             print(f"You found a {i.Armor[armorType][armorNumber]["name"]}! It has {i.Armor[armorType][armorNumber]["rating"]} armor rating and {i.Armor[armorType][armorNumber]["durability"]} durability left.")
+            b = 2
         else:
-            pass
+            return
     print("1. Take it\n2. Leave it\n3. Check your current item's stats\n\nNOTE: If you take the item and you already have an item, the new item will replace the old one.")
     choice = input("Your choice: ")
     print()
@@ -179,16 +218,22 @@ def replaceItem(a=random.randint(1,4), armorType=random.randint(1,3), armorNumbe
         print("Collected item.")
         print()
         t.sleep(0.1)
-        findItem(itemNumber, itemModifier)
+        if a == 1:
+            findItem(itemNumber, itemModifier)
+        else:
+            findItem(armor=2, armorType=armorType, armorNumber=armorNumber)
     elif choice == "2":
         pass
     elif choice == "3":
         t.sleep(0.1)
-        readItemStats()
-        if armor == 1:
-            replaceItem(a)
+        if b == 2:
+            readItemStats(3, armorType)
         else:
-            replaceItem(None, None, 2, armorType, armorNumber)
+            readItemStats()
+            if armor == 1:
+                replaceItem(a)
+            else:
+                replaceItem(None, None, 2, armorType, armorNumber)
     else:
         t.sleep(0.1)
         print("Please enter a valid choice.\n")
@@ -282,7 +327,7 @@ def dungeonRun():
     def nextLevel():
         level = i.playerLevel + 1
         expNeededBonus = (random.randint(10,(15*level)//3) // level) // 2
-        expNeeded = 50 * level + expNeededBonus
+        expNeeded = 50 * level + expNeededBonus + i.playerExp
         return expNeeded
 
     def printLevelUp():
@@ -371,6 +416,13 @@ def dungeonRun():
                     else:
                         extraDamage = pwr()
                         itemDegrade()
+                        num = 0
+                        for _ in range(3):
+                            check2 = runThruArmor(armorType=num, b=True)
+                            if check2 is not False:
+                                itemDegrade(2, num)
+                            num += 1
+                        
                     
                     totalDamage = i.playerDamage['damage'] + a + extraDamage
 
@@ -397,8 +449,10 @@ def dungeonRun():
                         find = random.randint(1, baddieOne["find"])
                         if find == 1:
                             replaceItem()
-                        find = random.randint(1,5)
+                        find = 3
+                        print(find)
                         if find == 3:
+                            print("yes!")
                             replaceItem(armor=2)
 
                         
