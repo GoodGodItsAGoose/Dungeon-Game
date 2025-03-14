@@ -1,5 +1,8 @@
+
 import random
 import time as t
+
+# staff has 20 when it should have at least 25
 
 """
 OPTIMIZE THE HELL UP
@@ -114,7 +117,7 @@ playerStats = {
     "stats": {"hp": 40, "damage": random.randint(4,8), "dodge chance": 20, "double hit chance": 16},
     "ups": {"damage up": 0, "dodge up": 0},
     "potions": {"damage-pot": 0, "dodge": 0, "restoration": 5},
-    "item": {"charge": None, "recharges": None, "name": None},
+    "item": {"charge": None, "recharges": None, "name": None, "max charges": None},
     "state": False,
     "modifier": None
 }
@@ -123,10 +126,10 @@ playerStats = {
 
 # list of items you can use in the game
 Items = {
-    1: {"charge": random.randint(5,20), "recharges": random.randint(1,3), "name": "Dagger"}, #collect this first name, then use that name to find damage
-    2: {"charge": random.randint(5,25), "recharges": random.randint(2,5), "name": "Staff"},
-    3: {"charge": random.randint(10,20), "recharges": random.randint(1,3), "name": "Shortsword"},
-    4: {"charge": random.randint(5,10), "recharges": random.randint(3,5), "name": "Sickle"}
+    1: {"charge": random.randint(5,20), "recharges": random.randint(1,3), "name": "Dagger", "max charges": random.randint(17,20)}, #collect this first name, then use that name to find damage
+    2: {"charge": random.randint(5,25), "recharges": random.randint(2,5), "name": "Staff", "max charges": random.randint(25,30)},
+    3: {"charge": random.randint(10,20), "recharges": random.randint(1,3), "name": "Shortsword", "max charges": random.randint(23,25)},
+    4: {"charge": random.randint(5,10), "recharges": random.randint(3,5), "name": "Sickle", "max charges": random.randint(13,17)}
 }
 
 # item bonus damages
@@ -181,7 +184,3 @@ def findAPotion(chance=1):
             elif amount != 1:
                 return f"{amount} {potionNames[potion_type]}s"
         num += 1
-
-# resets boosts
-playerBoosts["damage up"] = 0
-playerBoosts["dodge up"] = 0
