@@ -7,28 +7,33 @@ armor = [
 info = [
     "rating", "durability", "name"
 ]
-def armorCheck(thing, a=1, collect=False):
+def armorCheck(thing, a=1, collect=False, armorSet=1, armorChoice=1):
+    num = 0
+    
     for _ in range(3):
-        num1 = 1
-        num = 0
-        for _ in range(3):
-            if collect == True:
-                i.playerStats[armor[num]][info[num1-1]] = thing[info[num1-1]]
-                num += 1
-            elif i.playerStats[armor[num]][info[num1-1]] == "None" or i.playerStats[armor[num]][info[num1-1]] == None:
-                i.playerStats[armor[num]][info[num1-1]] = None
+        num1 = 0
+        if collect == True:
+            for _ in range(3):
+                print(armorSet)
+                i.playerStats[armor[armorSet-1]][info[num1]] = i.Armor[armorSet][armorChoice]
                 num1 += 1
+            return
+        for _ in range(3):
+            if collect == False:
+                armorSet = armor[num]
+                armorChoice = info[num1]
+            elif i.playerStats[armorSet][info[num1]] == "None" or i.playerStats[armorSet][info[num1]] == None:
+                i.playerStats[armorSet][info[num1]] = None
             else:
                 if a == 1:
                     try:
-                        i.playerStats[armor[num]][info[num1-1]] = int(thing[info[num1-1]])
+                        i.playerStats[armorSet][info[num1]] = int(thing[info[num1]])
                     except TypeError:
-                        i.playerStats[armor[num]][info[num1-1]] = thing[info[num1-1]]
-                    num1 += 1
+                        i.playerStats[armorSet][info[num1]] = thing[info[num1]]
                 else:
-                    i.playerStats[armor[num]][info[num1-1]] = None
-                    num1 += 1
-            num += 1
+                    i.playerStats[armorSet][info[num1]] = None
+            num1 += 1
+        num += 1
 
 # loading the last save's info from saves.txt
 def loadSave():
@@ -66,7 +71,7 @@ def loadSave():
 # updating the save's files
 def updateSave():
     saveStats = i.playerPotions, i.playerItems, i.playerItemsState, i.playerItemModifier, i.playerExp, i.playerLevel, i.playerStats["leggings"], i.playerStats["armbands"], i.playerStats["chestplate"]
-    removes = ["damage-pot", "dodge", "restoration", "max charges", "charge", "recharges", "name", "state", "modifier", "damage", "exp", "level", "leggings", "rating", "durability", "name", "armbands", "chestplate", "{", "}", ": ", '"', "'", "(", ")", "res"]
+    removes = ["damage-pot", "dodge", "restoration", "max charges", "charge", "recharges", "name", "state", "modifier", "damage", "exp", "level", "leggings", "rating", "durability", "name", "armbands", "chestplate", "{", "}", ": ", '"', "'", "(", ")", "res", "req"]
     subjects = ["damage-pot", "dodge", "restoration", "charge", "recharges", "name", "max charges", "state", "modifier", "exp", "level"]
     num = 0
     results = {}
