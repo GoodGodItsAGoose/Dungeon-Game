@@ -6,6 +6,8 @@ import Save as s
 # make enemies harder, but still survivable / add difficulty scaler?
 #update saves
 
+
+
 """
 
 if [armorName] == None:
@@ -104,6 +106,8 @@ def itemReset(armor=1):
         i.playerItemModifier = None
     else:
         s.armorCheck(2)
+    i.playerExp = 0
+    i.playerLevel = 1
 
 # allows the item to be used to fight
 def equipItem():
@@ -134,10 +138,12 @@ def findItem(itemNumber=None, itemModifier=random.randint(1,4), armor=1, armorTy
         i.playerItems["max charges"] = i.Items[itemNumber]["max charges"]
         i.playerItemModifier = itemModifier
     else:
-        num = 0
-        for _ in range(3):
-            s.armorCheck(i.playerStats[s.armor[num]], collect=True)
-            num += 1
+        s.armorCheck(i.Armor[armorType], collect=True, armorSet=armorType, armorChoice=armorNumber)
+        print(i.playerStats[s.armor[armorType-1]])
+
+
+findItem(armor=2)
+s.updateSave()
 
 # returns the damage boost
 def pwr():
@@ -206,10 +212,13 @@ def replaceItem(a=random.randint(1,4), armorType=random.randint(1,3), armorNumbe
         print(f"You found a {i.Items[itemNumber]["name"]}! It has {i.Items[itemNumber]["charge"]} charges left and {i.Items[itemNumber]["recharges"]} recharges left. It does {i.ItemPowers[itemModifier]["damage"]} extra damage.")
     else:
         if i.Armor[armorType][armorNumber]["level req"] <= i.playerStats["level"]:
-            print(f"You found a {i.Armor[armorType][armorNumber]["name"]}! It has {i.Armor[armorType][armorNumber]["rating"]} armor rating and {i.Armor[armorType][armorNumber]["durability"]} durability left.")
+            if armorType == 3:
+                print(f"You found a {i.Armor[armorType][armorNumber]["name"]}! It has {i.Armor[armorType][armorNumber]["rating"]} armor rating and {i.Armor[armorType][armorNumber]["durability"]} durability left.")
+            else:
+                print(f"You found {i.Armor[armorType][armorNumber]["name"]}! It has {i.Armor[armorType][armorNumber]["rating"]} armor rating and {i.Armor[armorType][armorNumber]["durability"]} durability left.")
             b = 2
         else:
-            return
+            pass
     print("1. Take it\n2. Leave it\n3. Check your current item's stats\n\nNOTE: If you take the item and you already have an item, the new item will replace the old one.")
     choice = input("Your choice: ")
     print()
@@ -446,6 +455,7 @@ def dungeonRun():
                                 print(f'You killed the {baddieName}! You got {drop} and {drop2}!')
                         else:
                             print(f'You killed the {baddieName}! You got {drop}!')
+                        print(f"You got {baddieOne["exp"]} exp!")
                         find = random.randint(1, baddieOne["find"])
                         if find == 1:
                             replaceItem()
@@ -536,6 +546,7 @@ def dungeonRun():
             
         # appears after each instance of attacking, options are to drink a potion or to attack
         def dungeonCheckIn():
+            i.randomizeStuff()
             t.sleep(0.1)
             print("1. Attack\n2. Drink a potion\n3. Equip or unequip your weapon\n4. Check item\n5. Check armor\n6. Check player level\n7. Go to menu\n")
             playerChoice = input("Your choice: ")
